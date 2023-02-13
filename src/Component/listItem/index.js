@@ -1,18 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import DemoImg from "../../assets/image 18.png";
 
-function ProductBox() {
+function ProductBox({ name, url, price, unit }) {
   return (
     <Box
       sx={{
         border: 1,
         borderColor: "primary.main",
         width: "90%",
-        padding:1,
-        borderRadius:2,
-        marginTop:2,
-        marginBottom:5
+        padding: 1,
+        borderRadius: 2,
+        marginTop: 2,
+        marginBottom: 5,
       }}
     >
       <Box
@@ -20,7 +19,6 @@ function ProductBox() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-     
         }}
       >
         <Box
@@ -29,10 +27,12 @@ function ProductBox() {
             alignItems: "center",
           }}
         >
-          <img src={DemoImg} alt="" width={100} />
-          <Box sx={{
-padding:0.5
-          }}>
+          <img src={url} alt="" width={80} />
+          <Box
+            sx={{
+              padding: 0.5,
+            }}
+          >
             <Typography
               variant="button"
               gutterBottom
@@ -40,7 +40,7 @@ padding:0.5
                 color: "primary.main",
               }}
             >
-              Apple
+              {name}
             </Typography>
             <Box>
               <Typography
@@ -50,14 +50,14 @@ padding:0.5
                   color: "grey",
                 }}
               >
-                1.kg
+                {unit}
               </Typography>
             </Box>
           </Box>
         </Box>
         <Box>
           <Typography variant="button" gutterBottom>
-            pkr 500
+            {price}pkr
           </Typography>
         </Box>
       </Box>

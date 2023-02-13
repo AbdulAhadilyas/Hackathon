@@ -15,20 +15,21 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { GlobalContext } from "../../../context/loginContext";
 import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const AddItem = () => {
   const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
-  const [age, setAge] = React.useState("");
+  const [category, setCategory] = React.useState("");
   const [desp, setDesp] = React.useState("");
-
   const [price, setPrice] = React.useState("");
   const [image, setImage] = React.useState(false);
   const [unitName, setUnitName] = React.useState("");
   const [itemName, setItemName] = React.useState("");
   let { state, dispatch } = useContext(GlobalContext);
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setCategory(event.target.value);
   };
 
   const submitHandler = async (e) => {
@@ -40,234 +41,268 @@ const AddItem = () => {
     formData.append("price", price);
     formData.append("itemName", itemName);
     formData.append("unitName", unitName);
+    formData.append("category", category);
 
     try {
       let response = await axios.post(`${state.baseUrl}/product`, formData, {
         withCredentials: true,
       });
       console.log(response);
+      toast("Product add successfuly", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     } catch (e) {
       console.log("e: ", e);
     }
+    setCategory("");
+    setDesp("");
+    setCategory("");
+    setPrice("");
+    setItemName("");
+    setImage(false);
+    setUnitName("");
   };
 
   return (
     <div>
       <Navbar />
-      <Box
-        sx={{
-          marginLeft: 4,
-          marginTop: 2,
-          height: "140vh",
-        }}
-      >
-        <Typography
-          variant="button"
-          gutterBottom
+      <Box>
+        <Box
           sx={{
-            color: "secondary.main",
+            marginLeft: 4,
+            marginTop: 1,
+            height: "140vh",
+            mt: 15,
           }}
         >
-          Add New Item
-        </Typography>
-
-        <form onSubmit={submitHandler}>
-          <Box
+          <Typography
+            variant="button"
+            gutterBottom
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              m: 3,
-              pl: 3,
-              pr: 5,
-              width: { lg: "300px", sm: "400px", xs: "410px" },
-              backgroundColor: "gray",
-              borderRadius: "15px",
+              color: "secondary.main",
             }}
           >
-            {" "}
-          </Box>
+            Add New Item
+          </Typography>
 
-          {!image ? (
-            <label htmlFor="select-image">
-              <Box
+          <form onSubmit={submitHandler}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                m: 2,
+                pl: 3,
+                pr: 5,
+                width: { lg: "300px", sm: "400px", xs: "410px" },
+                backgroundColor: "gray",
+                borderRadius: "15px",
+              }}
+            >
+              {" "}
+            </Box>
+
+            {!image ? (
+              <label htmlFor="select-image">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    pl: 1,
+                    pr: 1,
+                    marginTop: 2,
+                    width: { lg: "150px", sm: "150px", xs: "250px" },
+                    backgroundColor: "gray",
+                    borderRadius: "15px",
+                  }}
+                >
+                  <CameraAltIcon sx={{ fontSize: "4em", m: 4 }} />
+                  <input
+                    type="file"
+                    style={{
+                      display: "none",
+                    }}
+                    id="select-image"
+                    onChange={(e) => setImage(e.target.files[0])}
+                  />
+                </Box>
+              </label>
+            ) : (
+              <div className="zoom">
+                <img
+                  src={URL.createObjectURL(image)}
+                  width="190px"
+                  alt=""
+                  srcset=""
+                />
+              </div>
+            )}
+
+            <TextField
+              id="outlined-textarea"
+              label="Item name"
+              placeholder="Item name"
+              sx={{
+                height: 30,
+                mt: 2,
+              }}
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+            />
+            <Box
+              sx={{
+                mt: 4,
+              }}
+            >
+              <InputLabel id="demo-simple-select-autowidth-label">
+                Category
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={category}
+                onChange={handleChange}
+                label="Category"
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  pl: 1,
-                  pr: 1,
-                  marginTop: 2,
-                  width: { lg: "150px", sm: "150px", xs: "250px" },
-                  backgroundColor: "gray",
-                  borderRadius: "15px",
+                  width: 254,
+                  height: 40,
                 }}
               >
-                <CameraAltIcon sx={{ fontSize: "4em", m: 4 }} />
-                <input
-                  type="file"
-                  style={{
-                    display: "none",
-                  }}
-                  id="select-image"
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
-              </Box>
-            </label>
-          ) : (
-            <div className="zoom">
-              <img
-                style={{
-                  width: { lg: "200px", sm: "200px", xs: "200px" },
-                }}
-                src={URL.createObjectURL(image)}
-                height="200px"
-                width="280px"
-                alt=""
-                srcset=""
-              />
-            </div>
-          )}
+                <MenuItem value="grocery">grocery</MenuItem>
+                <MenuItem value="vegetable">vegetable</MenuItem>
+                <MenuItem value="fruite">fruit</MenuItem>
+                <MenuItem value="meet">meet</MenuItem>
+              </Select>
+            </Box>
 
-          <TextField
-            id="outlined-textarea"
-            label="Item name"
-            placeholder="Item name"
-            sx={{
-              height: 30,
-              mt: 2,
-            }}
-            onChange={(e) => setItemName(e.target.value)}
-          />
-          <Box
-            sx={{
-              mt: 4,
-            }}
-          >
-            <InputLabel id="demo-simple-select-autowidth-label">Age</InputLabel>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={age}
-              onChange={handleChange}
-              label="Age"
+            <TextField
+              id="outlined-multiline-static"
+              label="Description"
+              multiline
+              rows={4}
+              value={desp}
               sx={{
                 width: 254,
-                height: 40,
+                mt: 2,
               }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Twenty</MenuItem>
-              <MenuItem value={21}>Twenty one</MenuItem>
-              <MenuItem value={22}>Twenty one and a half</MenuItem>
-            </Select>
-          </Box>
-
-          <TextField
-            id="outlined-multiline-static"
-            label="Description"
-            multiline
-            rows={4}
-            defaultValue="Description"
-            sx={{
-              width: 254,
-              mt: 2,
-            }}
-            onChange={(e) => setDesp(e.target.value)}
-          />
-
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 250,
-            }}
-          >
-            <Typography
-              variant="button"
-              sx={{
-                color: "secondary.main",
-                mr: 2,
-              }}
-            >
-              Unit Name:
-            </Typography>
-            <TextField
-              id="outlined-textarea"
-              label="Unit Name"
-              placeholder="Unit Name"
-              sx={{
-                width: 150,
-                height: 50,
-              }}
-              onChange={(e) => setUnitName(e.target.value)}
+              onChange={(e) => setDesp(e.target.value)}
             />
-          </Box>
-          <Box
-            sx={{
-              mt: 2,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 250,
-            }}
-          >
-            <Typography
-              variant="button"
+
+            <Box
               sx={{
-                color: "secondary.main",
-                mr: 2,
+                mt: 2,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 250,
               }}
             >
-              Unit Price:
-            </Typography>
-            <TextField
-              id="outlined-textarea"
-              label="unit price"
-              placeholder="unit price"
+              <Typography
+                variant="button"
+                sx={{
+                  color: "secondary.main",
+                  mr: 2,
+                }}
+              >
+                Unit Name:
+              </Typography>
+              <TextField
+                id="outlined-textarea"
+                label="Unit Name"
+                placeholder="Unit Name"
+                value={unitName}
+                sx={{
+                  width: 150,
+                  height: 50,
+                }}
+                onChange={(e) => setUnitName(e.target.value)}
+              />
+            </Box>
+            <Box
               sx={{
-                width: 150,
-                height: 50,
+                mt: 2,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 250,
               }}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-          </Box>
+            >
+              <Typography
+                variant="button"
+                sx={{
+                  color: "secondary.main",
+                  mr: 2,
+                }}
+              >
+                Unit Price:
+              </Typography>
+              <TextField
+                id="outlined-textarea"
+                label="unit price"
+                placeholder="unit price"
+                sx={{
+                  width: 150,
+                  height: 50,
+                }}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </Box>
 
-          <Box
-            sx={{
-              mt: 3,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button type="submit">Add Product</Button>
-          </Box>
-        </form>
-      </Box>
+            <Box
+              sx={{
+                mt: 3,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button type="submit">Add Product</Button>
+            </Box>
+          </form>
+        </Box>
 
-      <Box>
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
+        <Box
           sx={{
-            background: "#fff",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            backgroundColor: "red",
+            height: 50,
             position: "fixed",
-            top: 523,
             left: 0,
-            right: 0,
+            bottom: 0,
           }}
         >
-          <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-          <BottomNavigationAction label="add-item" icon={<AddIcon />} />
-          <BottomNavigationAction label="account" icon={<AccountBoxIcon />} />
-        </BottomNavigation>
+          <BottomNavigation
+            showLabels
+            value={value}
+            onChange={(event, newValue) => {
+              if (newValue === 0) {
+                navigate("/");
+              } else if (newValue === 1) {
+                navigate("/admin/add-item");
+              }
+            }}
+            sx={{
+              background: "#fff",
+              width: "100%",
+            }}
+          >
+            <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+            <BottomNavigationAction label="add-item" icon={<AddIcon />} />
+            <BottomNavigationAction label="account" icon={<AccountBoxIcon />} />
+          </BottomNavigation>
+        </Box>
       </Box>
+    
     </div>
   );
 };

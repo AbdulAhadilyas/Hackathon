@@ -16,6 +16,11 @@ const Navbar = ({ name }) => {
         alignItems: "center",
         borderBottom: 2,
         borderColor: "#D3D3D3",
+        position: "fixed",
+        top: 0,
+        background:"#ffff",
+        width:"100%",
+        zIndex:2
       }}
     >
       <Box
