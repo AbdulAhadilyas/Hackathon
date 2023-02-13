@@ -8,6 +8,8 @@ import axios from "axios";
 import { GetStartScreen, Login, SingUp, AdminHome, AddItem } from "./Pages";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 function App() {
   let { state, dispatch } = useContext(GlobalContext);
   const navigate = useNavigate();
@@ -28,58 +30,27 @@ function App() {
     },
   });
 
-  // useEffect(() => {
-  //   const getProfile = async () => {
-  //     try {
-  //       let response = await axios.get(`${state.baseUrl}/products`, {
-  //         withCredentials: true
-  //       })
-
-  //       console.log("response: ", response);
-
-  //       dispatch({
-  //         type: 'USER_LOGIN'
-  //       })
-  //     } catch (error) {
-
-  //       console.log("axios error: ", error);
-
-  //       dispatch({
-  //         type: 'USER_LOGOUT'
-  //       })
-  //     }
-
-  //   }
-  //   getProfile();
-
-  // }, [])
-
-  // const logoutHandler = async () => {
-
-  //   try {
-  //     let response = await axios.post(`${state.baseUrl}/logout`, {
-  //       withCredentials: true
-  //     })
-  //     console.log("response: ", response);
-
-  //     dispatch({
-  //       type: 'USER_LOGOUT'
-  //     })
-  //   } catch (error) {
-  //     console.log("axios error: ", error);
-  //   }
-
-  // }
+  //
   console.log(state.user.role);
   return (
     <ThemeProvider theme={theme}>
-      <Routes>
-        <Route path="/" element={<GetStartScreen />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sing-up" element={<SingUp />} />
-        <Route path="/admin/home" element={<AdminHome />} />
-        <Route path="/admin/add-item" element={<AddItem />} />
-      </Routes>
+      {state.isLogin ? (
+        <Routes>
+          <Route path="/" element={<AdminHome />} />
+          <Route path="/admin/add-item" element={<AddItem />} />
+          <Route path="*" element={<GetStartScreen />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sing-up" element={<SingUp />} />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/" element={<GetStartScreen />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sing-up" element={<SingUp />} />
+          <Route path="*" element={<GetStartScreen />} />
+        </Routes>
+      )}
+      <ToastContainer />
     </ThemeProvider>
   );
 }
