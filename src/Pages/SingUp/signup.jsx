@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 
+
 export default function SignUp() {
   const navigate = useNavigate();
   let { state, dispatch } = useContext(GlobalContext);
@@ -172,12 +173,13 @@ export default function SignUp() {
                 name="email"
               />
               <CustomInput
-                icon={<VisibilityOff />}
+                icon={<Visibility />}
                 sx={{
                   width: 220,
                 }}
                 label="Password"
                 id="password"
+                type="password"
                 name="password"
                 onChange={singUpFormik.handleChange}
                 error={

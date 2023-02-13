@@ -12,10 +12,20 @@ import { height } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-  
+import { toast } from "react-toastify";
+
+
 export default function Login() {
   const navigate = useNavigate();
   let { state, dispatch } = useContext(GlobalContext);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const validationSchema = yup.object({
     email: yup
@@ -30,8 +40,8 @@ export default function Login() {
 
   const loginFormik = useFormik({
     initialValues: {
-      email: "foobar@example.com",
-      password: "foobar",
+      email: "myadmin@gmail.com",
+      password: "123123123",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -51,11 +61,19 @@ export default function Login() {
         });
         dispatch({
           type: "USER",
-          payload:response.data.profile
-        })
-        if(response.data.profile.role === "admin"){
-          navigate("/admin/home")
-        }
+          payload: response.data.profile,
+        });
+        toast("Login successfuly", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        navigate("/");
       } catch (e) {
         console.log("e: ", e);
       }
@@ -139,11 +157,12 @@ export default function Login() {
               />
 
               <CustomInput
-                icon={<VisibilityOff />}
+                icon={<Visibility />}
                 sx={{
                   width: 220,
                 }}
                 label="Password"
+                type={"password"}
                 value={loginFormik.values.password}
                 id="password"
                 name="password"
@@ -156,6 +175,8 @@ export default function Login() {
                   loginFormik.touched.password && loginFormik.errors.password
                 }
               />
+
+             
               <Box>
                 <Button
                   variant="text"
